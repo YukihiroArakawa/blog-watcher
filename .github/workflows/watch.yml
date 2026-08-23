@@ -1,0 +1,33 @@
+name: Watch blogs
+
+on:
+  schedule:
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Do not send email or write KV state
+        type: boolean
+        required: true
+        default: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v20
+      - name: Run watcher
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" || "${{ inputs.dry_run }}" == "false" ]]; then
+            nix develop --command dotnet run --project src/BlogWatcher --configuration Release -- --execute
+          else
+            nix develop --command dotnet run --project src/BlogWatcher --configuration Release
+          fi
