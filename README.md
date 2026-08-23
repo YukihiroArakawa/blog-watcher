@@ -33,6 +33,15 @@
 
 ローカル開発はdirenvを前提とし、初回に`direnv allow`を実行します。`.env.example`を`.env.local`へコピーして認証情報を設定してください。`.env.local`はGit管理外です。GitHub Actionsでは同じ名前のSecretsを設定します。
 
+初回セットアップ時に、リポジトリ同梱のpre-commitフックを有効にしてください。
+
+```console
+dotnet restore
+lefthook install
+```
+
+以降のコミット時には、Lefthookが.NETとNixのフォーマット検証、actionlintによるGitHub Actions検証、およびRoslyn Analyzerを有効にしたReleaseビルドを並列実行します。いずれかに失敗するとコミットは中止されます。NixとGitHub Actionsの検証は、対応するファイルがステージされている場合だけ実行します。フックは`--no-restore`で実行するため、依存関係を変更したときは先に`dotnet restore`を実行してください。設定を変更した場合、フックの再インストールは不要です。
+
 ローカル実行とGitHub Actionsの手動実行は、デフォルトでドライランにします。明示的に実行モードを指定した場合だけメール送信とKV更新を行います。
 
 ```console
