@@ -6,6 +6,14 @@ solution := "BlogWatcher.slnx"
 default:
     @just --list
 
+# NuGet依存関係を復元する
+restore:
+    dotnet restore {{ solution }}
+
+# 復元済みの依存関係を使ってビルドする
+build:
+    dotnet build {{ solution }} --no-restore
+
 # .NET、Nix、justfileを並列で整形する
 [parallel]
 format: dotnet-format nix-format just-format
@@ -17,6 +25,19 @@ format-check: dotnet-format-check nix-format-check just-format-check
 # Roslyn Analyzerとactionlintを並列で実行する
 [parallel]
 lint: dotnet-lint actions-lint
+
+# 単体テストと統合テストを実行する
+test:
+    dotnet test {{ solution }} --no-build
+
+# 実RSSと実KVを読み取る副作用なしのドライランを実行する
+dry-run:
+    dotnet run --project src/BlogWatcher
+
+# メール送信とKV更新を伴う実行モードを開始する
+[confirm("メール送信とKV更新を実行しますか？")]
+execute:
+    dotnet run --project src/BlogWatcher -- --execute
 
 # 全formatterとlinterを並列で検証する
 [parallel]

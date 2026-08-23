@@ -51,6 +51,9 @@ just format
 # Roslyn Analyzerとactionlintを実行する
 just lint
 
+# 単体テストと統合テストを実行する
+just test
+
 # フォーマット検証と全linterを並列実行する
 just check
 
@@ -67,15 +70,15 @@ just --choose
 
 ```console
 # 復元、ビルド、テスト
-dotnet restore
-dotnet build --no-restore
-dotnet test --no-build
+just restore
+just build
+just test
 
 # ドライラン（実RSS・実KVを読み取り、副作用なし）
-dotnet run --project src/BlogWatcher
+just dry-run
 
-# 実行モード
-dotnet run --project src/BlogWatcher -- --execute
+# 実行モード（メール送信とKV更新の確認プロンプトあり）
+just execute
 ```
 
 Cloudflare APIトークンには対象KV Namespaceの読み書きに必要な最小権限を付与し、Gmailでは2段階認証を有効にしてアプリパスワードを使用します。
