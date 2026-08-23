@@ -31,9 +31,24 @@
 - direnv
 - GitHub Actions
 
-ローカル開発はdirenvを前提とし、初回に`direnv allow`を実行します。認証情報はGit管理外の`.env.local`へ保存し、リポジトリには環境変数名だけを示す`.env.example`を置く予定です。GitHub Actionsでは同じ設定をSecretsから渡します。
+ローカル開発はdirenvを前提とし、初回に`direnv allow`を実行します。`.env.example`を`.env.local`へコピーして認証情報を設定してください。`.env.local`はGit管理外です。GitHub Actionsでは同じ名前のSecretsを設定します。
 
 ローカル実行とGitHub Actionsの手動実行は、デフォルトでドライランにします。明示的に実行モードを指定した場合だけメール送信とKV更新を行います。
+
+```console
+# 復元、ビルド、テスト
+dotnet restore
+dotnet build --no-restore
+dotnet test --no-build
+
+# ドライラン（実RSS・実KVを読み取り、副作用なし）
+dotnet run --project src/BlogWatcher
+
+# 実行モード
+dotnet run --project src/BlogWatcher -- --execute
+```
+
+Cloudflare APIトークンには対象KV Namespaceの読み書きに必要な最小権限を付与し、Gmailでは2段階認証を有効にしてアプリパスワードを使用します。
 
 ## 今後の候補
 
@@ -44,4 +59,4 @@ MVPには含めませんが、次の拡張を想定しています。
 - クレジット不足や障害時の別LLMへのフォールバック
 - OSSリリースの監視と要約
 
-詳細な要件、設計方針、障害時の振る舞い、受け入れ条件は[設計ドキュメント](docs/design.md)を参照してください。
+詳細な要件、設計方針、障害時の振る舞い、受け入れ条件は[設計ドキュメント](docs/design.md)を参照してください。実サービスを使った確認方法は[実環境動作確認手順](docs/production-verification.md)にまとめています。
