@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/BlogWatcher/BlogWatcher.csproj" />
+  <Project Path="tests/BlogWatcher.Tests/BlogWatcher.Tests.csproj" />
+</Solution>
