@@ -1,0 +1,5 @@
+.direnv/
+.env.local
+**/bin/
+**/obj/
+TestResults/
