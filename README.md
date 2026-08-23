@@ -40,7 +40,28 @@ dotnet restore
 lefthook install
 ```
 
-以降のコミット時には、Lefthookが.NETとNixのフォーマット検証、actionlintによるGitHub Actions検証、およびRoslyn Analyzerを有効にしたReleaseビルドを並列実行します。いずれかに失敗するとコミットは中止されます。NixとGitHub Actionsの検証は、対応するファイルがステージされている場合だけ実行します。フックは`--no-restore`で実行するため、依存関係を変更したときは先に`dotnet restore`を実行してください。設定を変更した場合、フックの再インストールは不要です。
+以降のコミット時には、Lefthookが`just check`を呼び出し、.NET、Nix、justfileのフォーマット検証、actionlint、およびRoslyn Analyzerを並列実行します。いずれかに失敗するとコミットは中止されます。フックは`--no-restore`で実行するため、依存関係を変更したときは先に`dotnet restore`を実行してください。設定を変更した場合、フックの再インストールは不要です。
+
+同じ検証はjustのタスクから任意のタイミングで実行できます。
+
+```console
+# .NET、Nix、justfileを整形する
+just format
+
+# Roslyn Analyzerとactionlintを実行する
+just lint
+
+# フォーマット検証と全linterを並列実行する
+just check
+
+# タスクを一覧表示する
+just --list
+
+# fzfでタスクを対話選択する
+just --choose
+```
+
+シェル補完スクリプトは`just --completions bash`、`just --completions zsh`、`just --completions fish`などで生成できます。利用中のシェルの設定ファイルから読み込んでください。
 
 ローカル実行とGitHub Actionsの手動実行は、デフォルトでドライランにします。明示的に実行モードを指定した場合だけメール送信とKV更新を行います。
 

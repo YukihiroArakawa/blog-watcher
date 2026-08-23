@@ -25,6 +25,8 @@
             packages = [
               pkgs.actionlint
               pkgs.dotnet-sdk_10
+              pkgs.fzf
+              pkgs.just
               pkgs.lefthook
               pkgs.nixfmt
             ];

@@ -1,13 +1,4 @@
 pre-commit:
-  parallel: true
   commands:
-    dotnet-formatter:
-      run: dotnet format BlogWatcher.slnx --no-restore --verify-no-changes
-    nix-formatter:
-      glob: "*.nix"
-      run: nixfmt --check {staged_files}
-    actions-linter:
-      glob: ".github/workflows/*.{yml,yaml}"
-      run: actionlint {staged_files}
-    linter:
-      run: dotnet build BlogWatcher.slnx --no-restore --configuration Release
+    checks:
+      run: just check
